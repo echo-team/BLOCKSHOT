@@ -40,4 +40,13 @@ function Blockshot()
 
         redraw(element);
     }
+
+    /**
+     * Pastes the HTMLCanvas element with screenshot to passed element
+     * @param {Element} element - DOM tree element where to post canvas
+     */
+    this.post(element)
+    {
+        element.appendChild(canvasElement.cloneNode(true));
+    }
 }

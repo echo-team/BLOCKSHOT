@@ -1,7 +1,41 @@
 function Blockshot()
 {
     var canvasElement = document.createElement("canvas"),
-        canvas = canvasElement.getContext("2d");
+        canvas = canvasElement.getContext("2d"),
+        shootingElement = null,
+        shootingCoords =
+        {
+            top: 0,
+            left: 0
+        };
+    document.body.appendChild(canvasElement);
+
+    /**
+     * Redraws a HTMLElement to the HTMLCanvas recoursively
+     * @param {Element} element - DOM tree element which will be redrawed
+     * @return {Object}         - object with top and left coords
+     */
+    function getCoords(element)
+    {
+        var parent = element.offsetParent,
+            coords =
+            {
+                top: 0,
+                left: 0
+            };
+
+        while (element && element.offsetTop !== undefined && element.offsetLeft !== undefined)
+        {
+            coords.top += element.offsetTop;
+            coords.left += element.offsetLeft;
+            element = element.offsetParent;
+        }
+
+        coords.top  -= shootingCoords.top;
+        coords.left -= shootingCoords.left;
+
+        return coords;
+    }
 
     /**
      * Redraws a HTMLElement to the HTMLCanvas recoursively
@@ -9,21 +43,30 @@ function Blockshot()
      * @param {Number} left     - left coordinate of element
      * @param {Number} top      - top coordinate of element
      */
-    function redraw(element, left, top)
+    function redraw(element)
     {
         switch (element.tagName)
         {
             case undefined:
 
-                canvas.fillText(element, left, top);
+                var text = element.cloneNode(true),
+                    span = document.createElement("span"),
+                    coords;
+
+                element.parentNode.insertBefore(span, element);
+                coords = getCoords(span);
+                span.textContent = element;
+
+                canvas.fillText(element.textContent, coords.left, span.offsetHeight + coords.top);
+                element.parentNode.removeChild(span);
                 break;
 
-            case default:
+            default:
 
                 for (var counter = 0; counter < element.childNodes.length; counter++)
                 {
                     var child = element.childNodes[counter];
-                    redraw(child, left + child.offsetLeft, top + child.offsetTop);
+                    redraw(child);
                 }
                 break;
         }
@@ -35,17 +78,20 @@ function Blockshot()
      */
     this.shot = function(element)
     {
-        canvasElement.setAttribute("WIDTH", element.offsetWidth);
-        canvasElement.setAttribute("HEIGHT", element.offsetHeight);
+        shootingElement = element;
+        shootingCoords = getCoords(shootingElement);
 
-        redraw(element);
+        canvasElement.setAttribute("WIDTH", element.clientWidth);
+        canvasElement.setAttribute("HEIGHT", element.clientHeight);
+
+        redraw(shootingElement, 0, 0);
     }
 
     /**
      * Pastes the HTMLCanvas element with screenshot to passed element
      * @param {Element} element - DOM tree element where to post canvas
      */
-    this.post(element)
+    this.post = function(element)
     {
         element.appendChild(canvasElement.cloneNode(true));
     }

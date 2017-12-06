@@ -38,6 +38,35 @@ function Blockshot()
     }
 
     /**
+     * Remove unnesessary spacing and tabulation
+     * @param {String} text - text to edit
+     */
+    function formatText(text)
+    {
+        var regexp = /\s+/g;
+        text = text.replace(regexp, " ");
+
+        regexp = /^\s/g;
+        text = text.replace(regexp, "");
+
+        regexp = /\s$/g;
+        text = text.replace(regexp, "");
+
+        return text;
+    }
+
+    /**
+     * Setts a text styles
+     * @param {Element} element - DOM tree element from what style will be got
+     */
+    function setTextStyle(element)
+    {
+        var style = window.getComputedStyle(element);
+        canvas.fillStyle = style.color;
+        canvas.font = style.fontStyle + " " + style.fontSize + " " + style.fontFamily;
+    }
+
+    /**
      * Redraws a HTMLElement to the HTMLCanvas recoursively
      * @param {Element} element - DOM tree element which will be redrawed
      * @param {Number} left     - left coordinate of element
@@ -57,7 +86,8 @@ function Blockshot()
                 coords = getCoords(span);
                 span.textContent = element;
 
-                canvas.fillText(element.textContent, coords.left, span.offsetHeight + coords.top);
+                setTextStyle(element.parentNode);
+                canvas.fillText(formatText(element.textContent), coords.left, span.offsetHeight + coords.top);
                 element.parentNode.removeChild(span);
                 break;
 
@@ -85,6 +115,7 @@ function Blockshot()
         canvasElement.setAttribute("HEIGHT", element.clientHeight);
 
         redraw(shootingElement, 0, 0);
+        formatText("           i    d\n\ng  ");
     }
 
     /**

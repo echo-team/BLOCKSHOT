@@ -38,6 +38,24 @@ function Blockshot()
     }
 
     /**
+     * Remove unnesessary spacing and tabulation
+     * @param {String} text - text to edit
+     */
+    function formatText(text)
+    {
+        var regexp = /\s+/g;
+        text = text.replace(regexp, " ");
+
+        regexp = /^\s/g;
+        text = text.replace(regexp, "");
+
+        regexp = /\s$/g;
+        text = text.replace(regexp, "");
+
+        return text;
+    }
+
+    /**
      * Setts a text styles
      * @param {Element} element - DOM tree element from what style will be got
      */
@@ -69,7 +87,7 @@ function Blockshot()
                 span.textContent = element;
 
                 setTextStyle(element.parentNode);
-                canvas.fillText(element.textContent, coords.left, span.offsetHeight + coords.top);
+                canvas.fillText(formatText(element.textContent), coords.left, span.offsetHeight + coords.top);
                 element.parentNode.removeChild(span);
                 break;
 
@@ -97,6 +115,7 @@ function Blockshot()
         canvasElement.setAttribute("HEIGHT", element.clientHeight);
 
         redraw(shootingElement, 0, 0);
+        formatText("           i    d\n\ng  ");
     }
 
     /**

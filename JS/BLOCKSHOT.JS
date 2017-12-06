@@ -38,6 +38,17 @@ function Blockshot()
     }
 
     /**
+     * Setts a text styles
+     * @param {Element} element - DOM tree element from what style will be got
+     */
+    function setTextStyle(element)
+    {
+        var style = window.getComputedStyle(element);
+        canvas.fillStyle = style.color;
+        canvas.font = style.fontStyle + " " + style.fontSize + " " + style.fontFamily;
+    }
+
+    /**
      * Redraws a HTMLElement to the HTMLCanvas recoursively
      * @param {Element} element - DOM tree element which will be redrawed
      * @param {Number} left     - left coordinate of element
@@ -57,6 +68,7 @@ function Blockshot()
                 coords = getCoords(span);
                 span.textContent = element;
 
+                setTextStyle(element.parentNode);
                 canvas.fillText(element.textContent, coords.left, span.offsetHeight + coords.top);
                 element.parentNode.removeChild(span);
                 break;

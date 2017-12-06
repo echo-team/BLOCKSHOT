@@ -91,6 +91,19 @@ function Blockshot()
                 element.parentNode.removeChild(span);
                 break;
 
+            case "IMG":
+
+                var image = new Image();
+                    coords = getCoords(element);
+
+                image.src = element.getAttribute("SRC");
+                image.onload = function()
+                               {
+                                   canvas.drawImage(image, coords.left, coords.top);
+                               }
+
+                break;
+
             default:
 
                 for (var counter = 0; counter < element.childNodes.length; counter++)

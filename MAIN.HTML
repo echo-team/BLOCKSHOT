@@ -6,14 +6,17 @@
     <div>
         <div>1</div>
         <div>2</div>
-        5 <br/> 6
+        <img SRC="IMAGE.PNG">
         <div>3</div>
         <div>4</div>
     </div>
     <script>
-        var shooter = new Blockshot();
-        shooter.shot(document.body.children[0]);
-        shooter.post(document.body);
+        window.onload = function()
+                        {
+                            var shooter = new Blockshot();
+                            shooter.shot(document.body.children[0]);
+                            shooter.post(document.body);
+                        }
     </script>
 </body>
 </html>
